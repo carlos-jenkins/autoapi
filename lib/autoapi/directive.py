@@ -5,27 +5,17 @@ FIXME: Do something with root toctree to hook direct submodules.
 """
 
 from os.path import join, dirname, abspath
+from traceback import print_exc
 
 from jinja2.sandbox import SandboxedEnvironment
 
-from docutils.nodes import General, Element
 from docutils.parsers.rst import Directive
 from docutils.statemachine import ViewList
-from sphinx.util.nodes import nested_parse_with_titles
 from sphinx.util.osutil import ensuredir
 from sphinx.jinja2glue import BuiltinTemplateLoader
 
 from . import __version__
 from .apinode import APINode
-
-
-class AutoAPINode(General, Element):
-    """
-    Autoapi dummy node.
-
-    Just a general element to serve as parent for nested parsing of the
-    autoapi directive.
-    """
 
 
 class AutoAPI(Directive):
@@ -51,14 +41,14 @@ class AutoAPI(Directive):
     def autoapi_build(self, tree):
         """
         """
-        app = self.state.document.settings.env.app
+        env = self.state.document.settings.env
 
         # DEBUG
         print('=' * 79)
-        print(app.config.source_suffix)
-        print(app.config.srcdir)
-        print(app.config.doctreedir)
-        print(app.config.found_docs)
+        print(env.config.source_suffix)
+        print(env.srcdir)
+        print(env.doctreedir)
+        print(env.found_docs)
         print('=' * 79)
 
         # Get template
@@ -66,11 +56,9 @@ class AutoAPI(Directive):
         # pkgutil.get_data(), but because we want the user to override the
         # default template we need to hook it to the Sphinx loader, and thus
         # a file system approach is required as it is implemented like that.
+        template_dir = [join(dirname(abspath(__file__)), 'template')]
         template_loader = BuiltinTemplateLoader()
-        template_loader.init(
-            app.builder,
-            dirs=[join(dirname(dirname(abspath(__file__))), 'template')]
-        )
+        template_loader.init(env.app.builder, dirs=template_dir)
         template_env = SandboxedEnvironment(loader=template_loader)
         template = template_env.get_template('module.rst')
 
@@ -81,7 +69,7 @@ class AutoAPI(Directive):
         )
 
         # Render all remaining nodes as separated documents
-        gen_dir = join(app.config.srcdir, 'fixme')
+        gen_dir = join(env.srcdir, 'fixme')
         ensuredir(gen_dir)
 
         for name, node in tree.directory.items():
@@ -92,11 +80,7 @@ class AutoAPI(Directive):
             if node.is_leaf and not node.has_public_api():
                 continue
 
-            out_file = join(
-                gen_dir, '{}.{}'.format(
-                    name, app.config.source_suffix
-                )
-            )
+            out_file = join(gen_dir, name + env.config.source_suffix)
             with open(out_file, 'w') as fd:
                 fd.write(template.render(node=node))
 
@@ -113,16 +97,13 @@ class AutoAPI(Directive):
 
         except Exception as e:
             # Create a warning if the process failed
+            print_exc()
             msg = 'Unable to build autoapi for {}: {}'.format(module, str(e))
             return [
                 self.state.document.reporter.warning(msg, line=self.lineno)
             ]
 
-        # Create a dummy parent node for all nodes that will be created by
-        # when parsing the content
-        node = AutoAPINode('')
-        nested_parse_with_titles(self.state, self.content, node)
-        return [node]
+        return []
 
 
 def setup(app):
