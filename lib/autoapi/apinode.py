@@ -271,21 +271,4 @@ class APINode(object):
         return self.tree()
 
 
-if __name__ == '__main__':
-    from logging import basicConfig, DEBUG
-    basicConfig(level=DEBUG)
-    m = APINode('confspec')
-
-    for node, leaves in m.walk():
-        print(
-            '{} node has leaves: {}'.format(
-                node.name, ', '.join([l.name for l in leaves])
-            )
-        )
-
-    from code import InteractiveConsole
-    import readline  # noqa
-    InteractiveConsole(globals()).interact()
-
-
 __all__ = ['APINode']
