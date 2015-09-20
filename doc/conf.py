@@ -45,7 +45,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinxcontrib.plantuml',
     'sphinx.ext.graphviz',
-    'autoapi.directive'
+    'autoapi.sphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

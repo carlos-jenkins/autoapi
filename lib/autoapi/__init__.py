@@ -15,13 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""
-autoapi module entry point.
-"""
-
 from __future__ import unicode_literals, absolute_import
 from __future__ import print_function, division
+
+from .apinode import __doc__, APINode  # noqa
 
 __author__ = 'Carlos Jenkins'
 __email__ = 'carlos@jenkins.co.cr'
 __version__ = '0.1.0'
+
+__api__ = ['APINode']

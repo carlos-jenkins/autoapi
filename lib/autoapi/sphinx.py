@@ -22,6 +22,7 @@ Glue for Sphinx API.
 from __future__ import unicode_literals, absolute_import
 from __future__ import print_function, division
 
+from traceback import format_exc
 from os.path import join, dirname, abspath, exists
 
 from jinja2.sandbox import SandboxedEnvironment
@@ -30,6 +31,20 @@ from sphinx.jinja2glue import BuiltinTemplateLoader
 
 from . import __version__
 from .apinode import APINode
+
+
+def handle_exception(func):
+    """
+    Utility decorator to report all exceptions in module without making Sphinx
+    to die.
+    """
+    def wrapper(app):
+        try:
+            func(app)
+        except Exception as e:
+            app.warn('Unhandled exception in autoapi module: {}'.format(e))
+            app.debug(format_exc())
+    return wrapper
 
 
 def get_template_env(app):
@@ -51,6 +66,7 @@ def get_template_env(app):
     return template_env
 
 
+@handle_exception
 def builder_inited(app):
     """
     autoapi Sphinx extension hook for the ``builder-inited`` event.
@@ -87,10 +103,19 @@ def builder_inited(app):
         # Ignore leaf nodes without public API
         # Non-leaf nodes without public API are required to be rendered
         # in order to have an index of their subnodes.
-        nodes = [
-            (name, node) for name, node in tree.directory.items()
-            if node.has_public_api() or not node.is_leaf()
-        ]
+        # Note: Commenting out, as the situation is more complex than this.
+        # For example, a node can not be a leaf, and thus is generated. But
+        # later we found out that their leaf children doesn't have a public
+        # API, and so we ignore them, but the parent got a reference for them
+        # in the toctree. Until I decide what to do with this, if to filter
+        # all branches or to just render everything I'll leave it as just
+        # render everything. In part, maybe because the documentation for the
+        # module can be relevant while not their public API?
+        # nodes = [
+        #     (name, node) for name, node in tree.directory.items()
+        #     if node.has_public_api() or not node.is_leaf()
+        # ]
+        nodes = tree.directory.items()
         if not nodes:
             continue
 
