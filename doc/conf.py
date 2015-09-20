@@ -303,6 +303,10 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
 
+# Add style overrides
+def setup(app):
+    app.add_stylesheet('styles/custom.css')
+
 # autoapi configuration
 autoapi_modules = {
     'autoapi': {'prune': True},
