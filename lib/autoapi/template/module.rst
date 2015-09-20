@@ -59,6 +59,7 @@ Classes
 =======
 
 .. autosummary::
+   :nosignatures:
 {% for item in node.classes %}
    {{ item }}
 {%- endfor %}
@@ -81,6 +82,7 @@ Exceptions
 ==========
 
 .. autosummary::
+   :nosignatures:
 {% for item in node.exceptions %}
    {{ item }}
 {%- endfor %}
