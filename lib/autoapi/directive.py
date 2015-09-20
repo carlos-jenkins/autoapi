@@ -22,13 +22,9 @@ autoapi directive for Sphinx.
 from __future__ import unicode_literals, absolute_import
 from __future__ import print_function, division
 
-from os.path import join, dirname, abspath
-from traceback import print_exc
+from os.path import join, dirname, abspath, exists
 
 from jinja2.sandbox import SandboxedEnvironment
-
-from docutils.parsers.rst import Directive
-from docutils.statemachine import ViewList
 from sphinx.util.osutil import ensuredir
 from sphinx.jinja2glue import BuiltinTemplateLoader
 
@@ -36,99 +32,95 @@ from . import __version__
 from .apinode import APINode
 
 
-class AutoAPI(Directive):
+def get_template_env(app):
     """
-    Autoapi directive.
+    Get the template environment.
 
-    This directive will perform the following steps:
+    .. note::
 
-    - Build a :class:`autoapi.apinode.APINode` tree with the module name
-      specified as argument.
-    - Render the Jinja2 template with the root node and append the result as
-      content for this directive.
-    - Traverse the tree and for each node, except for leaf nodes without public
-      API, render the Jinja2 template and write the result as a new source
-      file.
+       Template should be loaded as a package_data using
+       :py:function:`pkgutil.get_data`, but because we want the user to
+       override the default template we need to hook it to the Sphinx loader,
+       and thus a file system approach is required as it is implemented like
+       that.
     """
-    required_arguments = 1
-    optional_arguments = 0
-    final_argument_whitespace = False
-    has_content = True
-    option_spec = {}
+    template_dir = [join(dirname(abspath(__file__)), 'template')]
+    template_loader = BuiltinTemplateLoader()
+    template_loader.init(app.builder, dirs=template_dir)
+    template_env = SandboxedEnvironment(loader=template_loader)
+    return template_env
 
-    def autoapi_build(self, tree):
-        """
-        """
-        env = self.state.document.settings.env
 
-        # DEBUG
-        print('=' * 79)
-        print(env.config.source_suffix)
-        print(env.srcdir)
-        print(env.doctreedir)
-        print(env.found_docs)
-        print('=' * 79)
+def builder_inited(app):
+    """
+    autoapi Sphinx extension hook for the ``builder-inited`` event.
+
+    This hook will read the configuration value ``autoapi_modules`` and render
+    the modules described in it.
+    """
+    # Get modules to build documentation for
+    modules = app.config.autoapi_modules
+    if not modules:
+        return
+
+    # Get template environment
+    template_env = get_template_env(app)
+
+    for module, options in modules.items():
+
+        # Get options
+        defaults = {
+            'override': True,
+            'template': 'module.rst',
+            'output': module
+        }
+        if options:
+            defaults.update(options)
 
         # Get template
-        # Note: Template should be loaded as a package_data using
-        # pkgutil.get_data(), but because we want the user to override the
-        # default template we need to hook it to the Sphinx loader, and thus
-        # a file system approach is required as it is implemented like that.
-        template_dir = [join(dirname(abspath(__file__)), 'template')]
-        template_loader = BuiltinTemplateLoader()
-        template_loader.init(env.app.builder, dirs=template_dir)
-        template_env = SandboxedEnvironment(loader=template_loader)
-        template = template_env.get_template('module.rst')
+        template = template_env.get_template(defaults['template'])
 
-        # Render root and append it to current node content
-        autodoc = template.render(node=tree)
-        self.content.extend(
-            ViewList(initlist=autodoc.splitlines(), source=tree.name)
-        )
+        # Build API tree
+        tree = APINode(module)
 
-        # Render all remaining nodes as separated documents
-        gen_dir = join(env.srcdir, 'fixme')
-        ensuredir(gen_dir)
+        # Gather nodes to document
+        # Ignore leaf nodes without public API
+        # Non-leaf nodes without public API are required to be rendered
+        # in order to have an index of their subnodes.
+        nodes = [
+            (name, node) for name, node in tree.directory.items()
+            if node.has_public_api() or not node.is_leaf()
+        ]
+        if not nodes:
+            continue
 
-        for name, node in tree.directory.items():
+        # Define output directory
+        out_dir = join(app.env.srcdir, defaults['output'])
+        ensuredir(out_dir)
 
-            # Ignore leaf nodes with public API
-            # Non-leaf nodes without public API are required to be rendered
-            # in order to have an index of their subnodes.
-            if node.is_leaf and not node.has_public_api():
+        # Iterate nodes and render them
+        for name, node in nodes:
+            out_file = join(out_dir, name + app.config.source_suffix[0])
+
+            # Skip file if it override is off and it exists
+            if not defaults['override'] and exists(out_file):
                 continue
 
-            out_file = join(gen_dir, name + env.config.source_suffix[0])
             with open(out_file, 'w') as fd:
                 fd.write(template.render(node=node))
 
-    def run(self):
-        # Get name of the module that is directive argument
-        module = self.arguments[0]
-
-        try:
-            # Build module tree
-            tree = APINode(module)
-
-            # Generate content
-            self.autoapi_build(tree)
-
-        except Exception as e:
-            # Create a warning if the process failed
-            print_exc()
-            msg = 'Unable to build autoapi for {}: {}'.format(module, str(e))
-            return [
-                self.state.document.reporter.warning(msg, line=self.lineno)
-            ]
-
-        return []
-
 
 def setup(app):
+    """
+    autoapi Sphinx extension setup.
+
+    See http://sphinx-doc.org/extdev/tutorial.html#the-setup-function
+    """
     # autodoc is required
     app.setup_extension('sphinx.ext.autodoc')
-    app.add_directive('autoapi', AutoAPI)
-    return {'version': __version__, 'parallel_read_safe': True}
+    app.add_config_value('autoapi_modules', {}, True)
+    app.connect(b'builder-inited', builder_inited)
+    return {'version': __version__}
 
 
-__all__ = ['AutoAPI']
+__all__ = ['builder_inited', 'setup']

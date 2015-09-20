@@ -2,7 +2,7 @@
    :hidden:
 
    developer
-   reference
+   autoapi/autoapi
 
 =======
 autoapi
@@ -12,14 +12,15 @@ autoapi
 
    .. image:: _static/images/logo.png
 
-Automatic API reference documentation generation for Sphinx inspired by Doxygen
+Automatic API reference documentation generation for Sphinx inspired by
+Doxygen.
 
 
 Documentation
 =============
 
 - :doc:`Developer Guide. <developer>`
-- :doc:`Internal Documentation Reference. <reference>`
+- :doc:`Internal Documentation Reference. <autoapi/autoapi>`
 
 
 Development

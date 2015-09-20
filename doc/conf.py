@@ -311,6 +311,9 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
 
+# autoapi configuration
+autoapi_modules = {'autoapi': None}
+
 # Configure PlantUML
 plantuml = 'java -jar ' + join(dirname(abspath(__name__)), 'plantuml.8030.jar')
 plantuml_output_format = 'svg'

@@ -9,7 +9,9 @@ build/*
 
 # Sphinx
 doc/_build/*
-doc/fixme/*
+
+# Sphinx autoapi
+doc/autoapi/*
 
 # Tox
 .tox/*
