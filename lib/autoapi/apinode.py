@@ -190,6 +190,15 @@ class APINode(object):
         """
         return len(self.subnodes) == 0
 
+    def is_root(self):
+        """
+        Check if the current node is the root node.
+
+        :rtype: bool
+        :return: True if the current node is the root node.
+        """
+        return self.directory.keys()[0] == self.name
+
     def get_module(self, name):
         """
         Get a module node by it's name.
