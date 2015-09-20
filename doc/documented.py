@@ -26,7 +26,7 @@ def a_function(my_arg, another):
 
     :param int my_arg: The first argument of the function. Just a number.
     :param another: The other argument of the important function.
-    :type another: A list of :class:`MyClass`.
+    :type another: A list of :class:`MyClass`
     :rtype: int
     :return: The length of the second argument times the first argument.
     """
@@ -45,6 +45,9 @@ class MyClass(object):
     :var my_attribute: Just an instance attribute.
     :raises TypeError: if param2 is not None.
     """
+
+    class_attribute = 625
+    """This is a class attribute."""
 
     def __init__(self, param1, param2=None):
         self.param1 = param1
