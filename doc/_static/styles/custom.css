@@ -1,6 +1,7 @@
 /* Improve autodoc */
 dl.class,
-dl.function {
+dl.function,
+dl.exception {
     background: #f3f6f6 !important;
     border: 1px solid #D3D3D3 !important;
 }
