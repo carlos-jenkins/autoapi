@@ -1,6 +1,7 @@
 {%- block toctree -%}
 {%- if node.subnodes -%}
 .. toctree::
+   :hidden:
 {% for item in node.subnodes %}
    {{ item.name }}
 {%- endfor %}
@@ -10,11 +11,6 @@
 {{ '=' * node.name|length }}
 {{ node.name }}
 {{ '=' * node.name|length }}
-
-::
-
-    {{ node.tree() }}
-
 
 .. automodule:: {{ node.name }}
    :show-inheritance:
