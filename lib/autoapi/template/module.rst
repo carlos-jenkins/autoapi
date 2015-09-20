@@ -96,3 +96,21 @@ Exceptions
 {%- endfor -%}
 {%- endif -%}
 {%- endblock -%}
+
+{%- block variables -%}
+{%- if node.variables %}
+
+Variables
+=========
+
+.. autosummary::
+{% for item in node.variables %}
+   {{ item }}
+{%- endfor %}
+
+{% for item in node.variables %}
+.. autodata:: {{ item }}
+{##}
+{%- endfor -%}
+{%- endif -%}
+{%- endblock -%}
