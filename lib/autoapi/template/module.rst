@@ -1,3 +1,13 @@
+{%- block toctree -%}
+{%- if node.subnodes -%}
+.. toctree::
+{% for item in node.subnodes %}
+   {{ item.name }}
+{%- endfor %}
+{##}
+{% endif -%}
+{%- endblock -%}
+{{ '=' * node.name|length }}
 {{ node.name }}
 {{ '=' * node.name|length }}
 
@@ -16,7 +26,7 @@
 {%- if node.subnodes %}
 
 Modules
--------
+=======
 
 .. autosummary::
 {% for item in node.subnodes %}
@@ -32,7 +42,7 @@ Modules
 {%- if node.functions %}
 
 Functions
----------
+=========
 
 .. autosummary::
 {% for item in node.functions %}
@@ -50,7 +60,7 @@ Functions
 {%- if node.classes %}
 
 Classes
--------
+=======
 
 .. autosummary::
 {% for item in node.classes %}
@@ -72,7 +82,7 @@ Classes
 {%- if node.exceptions %}
 
 Exceptions
-----------
+==========
 
 .. autosummary::
 {% for item in node.exceptions %}
