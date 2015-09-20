@@ -44,6 +44,11 @@ def handle_exception(func):
         except Exception as e:
             app.warn('Unhandled exception in autoapi module: {}'.format(e))
             app.debug(format_exc())
+
+    # Preserve docstring
+    if hasattr(func, '__doc__'):
+        wrapper.__doc__ = func.__doc__
+
     return wrapper
 
 
@@ -73,6 +78,8 @@ def builder_inited(app):
 
     This hook will read the configuration value ``autoapi_modules`` and render
     the modules described in it.
+
+    See http://sphinx-doc.org/extdev/appapi.html#event-builder-inited
     """
     # Get modules to build documentation for
     modules = app.config.autoapi_modules
