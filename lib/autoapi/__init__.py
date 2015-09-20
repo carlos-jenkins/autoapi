@@ -24,4 +24,4 @@ __author__ = 'Carlos Jenkins'
 __email__ = 'carlos@jenkins.co.cr'
 __version__ = '0.1.0'
 
-__api__ = ['APINode']
+__all__ = ['APINode']

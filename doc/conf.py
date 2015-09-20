@@ -312,7 +312,7 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 # autoapi configuration
-autoapi_modules = {'autoapi': None}
+autoapi_modules = {'autoapi': {'prune': True}}
 
 # Configure PlantUML
 plantuml = 'java -jar ' + join(dirname(abspath(__name__)), 'plantuml.8030.jar')

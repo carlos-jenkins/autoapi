@@ -192,6 +192,12 @@ class APINode(object):
                 continue
             self.variables[obj_name] = obj
 
+        # Flag to mark if this branch is relevant
+        # None means undertermined
+        self._relevant = None
+        if self.is_root():
+            self.is_relevant()
+
     def has_public_api(self):
         """
         Check if this node has a public API.
@@ -222,6 +228,30 @@ class APINode(object):
         """
         return self.directory.keys()[0] == self.name
 
+    def is_relevant(self):
+        """
+        Check if this branch of the tree is relevant.
+
+        A branch is relevant if the current node has a public API or if any of
+        its subnodes is relevant (in order to reach relevant nodes).
+
+        Relevancy is determined at initialization by the root node.
+
+        :rtype: bool
+        :return: True if the current node is relevant.
+        """
+        if self._relevant is not None:
+            return self._relevant
+
+        relevant = False
+        if self.has_public_api() or \
+                any(s.is_relevant() for s in self.subnodes):
+            relevant = True
+
+        self._relevant = relevant
+
+        return self._relevant
+
     def get_module(self, name):
         """
         Get a module node by it's name.
@@ -238,8 +268,8 @@ class APINode(object):
         """
         Traverse the tree top-down.
 
-        This method will yield tuples (node, [leaves]) for each node in the
-        tree.
+        :return: This method will yield tuples ``(node, [leaves])`` for each
+         node in the tree.
         """
         if self.is_leaf():
             raise StopIteration()

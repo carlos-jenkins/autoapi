@@ -1,16 +1,16 @@
 {%- block toctree -%}
-{%- if node.subnodes -%}
+{%- if subnodes -%}
 .. toctree::
    :hidden:
-{% for item in node.subnodes %}
+{% for item in subnodes %}
    {{ item.name }}
 {%- endfor %}
 {##}
 {% endif -%}
 {%- endblock -%}
-{{ '=' * node.name|length }}
-{{ node.name }}
-{{ '=' * node.name|length }}
+=={{ '=' * node.name|length }}============
+``{{ node.name }}`` reference
+=={{ '=' * node.name|length }}============
 
 .. automodule:: {{ node.name }}
    :show-inheritance:
@@ -19,13 +19,13 @@
       :local:
 {##}
 {%- block modules -%}
-{%- if node.subnodes %}
+{%- if subnodes %}
 
 Modules
 =======
 
 .. autosummary::
-{% for item in node.subnodes %}
+{% for item in subnodes %}
    {{ item.name }}
 {%- endfor %}
 {##}

@@ -82,57 +82,59 @@ def builder_inited(app):
     # Get template environment
     template_env = get_template_env(app)
 
-    for module, options in modules.items():
+    for module, overrides in modules.items():
 
         # Get options
-        defaults = {
+        options = {
+            'prune': False,
             'override': True,
             'template': 'module.rst',
             'output': module
         }
-        if options:
-            defaults.update(options)
+        if overrides:
+            options.update(overrides)
 
         # Get template
-        template = template_env.get_template(defaults['template'])
+        template = template_env.get_template(options['template'])
 
         # Build API tree
         tree = APINode(module)
 
         # Gather nodes to document
-        # Ignore leaf nodes without public API
-        # Non-leaf nodes without public API are required to be rendered
-        # in order to have an index of their subnodes.
-        # Note: Commenting out, as the situation is more complex than this.
-        # For example, a node can not be a leaf, and thus is generated. But
-        # later we found out that their leaf children doesn't have a public
-        # API, and so we ignore them, but the parent got a reference for them
-        # in the toctree. Until I decide what to do with this, if to filter
-        # all branches or to just render everything I'll leave it as just
-        # render everything. In part, maybe because the documentation for the
-        # module can be relevant while not their public API?
-        # nodes = [
-        #     (name, node) for name, node in tree.directory.items()
-        #     if node.has_public_api() or not node.is_leaf()
-        # ]
-        nodes = tree.directory.items()
+        if options['prune']:
+            nodes = [
+                node for node in tree.directory.values()
+                if node.is_relevant()
+            ]
+        else:
+            nodes = tree.directory.values()
+
         if not nodes:
             continue
 
         # Define output directory
-        out_dir = join(app.env.srcdir, defaults['output'])
+        out_dir = join(app.env.srcdir, options['output'])
         ensuredir(out_dir)
 
         # Iterate nodes and render them
-        for name, node in nodes:
-            out_file = join(out_dir, name + app.config.source_suffix[0])
+        for node in nodes:
+            out_file = join(out_dir, node.name + app.config.source_suffix[0])
 
             # Skip file if it override is off and it exists
-            if not defaults['override'] and exists(out_file):
+            if not options['override'] and exists(out_file):
                 continue
 
+            # Consider only subnodes that are relevant if prune is enabled
+            subnodes = node.subnodes
+            if options['prune']:
+                subnodes = [
+                    subnode for subnode in node.subnodes
+                    if subnode.is_relevant()
+                ]
+
+            # Write file
             with open(out_file, 'w') as fd:
-                fd.write(template.render(node=node))
+                fd.write(template.render(node=node, subnodes=subnodes))
 
 
 def setup(app):
