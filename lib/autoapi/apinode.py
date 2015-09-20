@@ -1,3 +1,79 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2015 Carlos Jenkins <carlos@jenkins.co.cr>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+"""
+Module that provides the module tree node :class:`APINode`.
+
+This class will load the module identified by ``name`` and recursively build a
+tree with all it's submodules and subpackages. In the process, each node
+analyze and fetch the public API of that module.
+
+``name`` can be any node, like the root package, or any subpackage or submodule
+and a tree will be built from there. ``name`` must follow the standard
+"dot notation" for importing a module.
+
+This class will not assume any special naming, or perform any complex analysis
+to determine what must be in the public interface. This is because it is not
+only a difficult problem, but it involves analyzing deeply the namespace of the
+module which can be quite expensive.
+
+In general it is very difficult to determine in a module namespace what
+elements are private or public declared locally, private or public but declared
+in another module and brought into the module local namespace
+(``from x import y``), third party library, Python standard library, etc. At
+the end, any algorithm that tries to determine this will eventually fail to
+meet the requirements or expectations of the developer, leaving false positives
+or removing elements expected to be present in the public API.
+
+For example, a common scenario is that some modules, specially package entry
+points ``__init__.py``, can be setup to expose the public API of their sibling
+modules, possible causing several objects to be identified as part of the
+public API of both modules.
+
+Because of this the approach taken by this module follows the rule in PEP20
+"Explicit is better than implicit". In consequence, the node will consider
+elements as public if they are explicitly listed in the ``__api__`` or
+``__all__`` variables. It is up to the developer to list the elements that must
+be published in the public API.
+
+``__api__`` is a special variable introduced by this module, and it exists for
+situation were for whatever reason the developer don't want to list in the
+``__all__`` variable an element that needs to be published in the public API.
+
+This class will extract all elements identified in ONE of those listings (not
+the union), with ``__api__`` having the precedence. If none of those variables
+exists in the module then it will be assumed that no public API exists for that
+module and no futher actions will be taken.
+
+If any of those variables exists this class will iterate all elements listed in
+them and will catalog them in four categories:
+
+- Functions.
+- Exceptions.
+- Classes.
+- Variables.
+
+Being Variables the default if it cannot be determined that an element belongs
+to any of other categories.
+"""
+
+from __future__ import unicode_literals, absolute_import
+from __future__ import print_function, division
+
 from logging import getLogger
 from traceback import format_exc
 from importlib import import_module
@@ -12,59 +88,6 @@ log = getLogger(__name__)
 class APINode(object):
     """
     Tree node class for module instrospection.
-
-    This class will load the module identified by ``name`` and recursively
-    build a tree with all it's submodules and subpackages. In the process, each
-    node analyze and fetch the public API of that module.
-
-    ``name`` can be any node, like the root package, or any subpackage or
-    submodule and a tree will be built from there. ``name`` must follow the
-    standard "dot notation" for importing a module.
-
-    This class will not assume any special naming, or perform any complex
-    analysis to determine what must be in the public interface. This is because
-    it is not only a difficult problem, but it involves analyzing deeply the
-    namespace of the module which can be quite expensive.
-
-    In general it is very difficult to determine in a module namespace what
-    elements are private or public declared locally, private or public but
-    declared in another module and brought into the module local namespace
-    (``from x import y``), third party library, Python standard library, etc.
-    At the end, any algorithm that tries to determine this will eventually fail
-    to meet the requirements or expectations of the developer, leaving false
-    positives or removing elements expected to be present in the public API.
-
-    For example, a common scenario is that some modules, specially package
-    entry points ``__init__.py``, can be setup to expose the public API of
-    their sibling modules, possible causing several objects to be identified
-    as part of the public API of both modules.
-
-    Because of this the approach taken by this modules follows the rule in
-    PEP20 "Explicit is better than implicit". In consequence, the node will
-    consider elements as public if they are explicitly listed in the
-    ``__api__`` or ``__all__`` variables. It is up to the developer to list
-    the elements that must be published in the public API.
-
-    ``__api__`` is a special variable introduced by this module, and it exists
-    for situation were for whatever reason the developer don't want to list in
-    the ``__all__`` variable an element that needs to be published in the
-    public API.
-
-    This class will extract all elements identified in ONE of those listings
-    (not the union), with ``__api__`` having the precedence. If none of those
-    variables exists in the module then it will be assumed that no public API
-    exists for that module and no futher actions will be taken.
-
-    If any of those variables exists this class will iterate all elements
-    listed in them and will catalog them in four categories:
-
-    - Functions.
-    - Exceptions.
-    - Classes.
-    - Variables.
-
-    Being Variables the default if it cannot be determined that an element
-    belongs to any of other categories.
 
     :param str name: Name of the module to build the tree from. It must follow
      the "dot notation" of the import mechanism.

@@ -16,7 +16,7 @@
 # under the License.
 
 """
-autoapi directive for Sphinx.
+Glue for Sphinx API.
 """
 
 from __future__ import unicode_literals, absolute_import
