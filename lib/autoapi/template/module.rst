@@ -13,7 +13,6 @@
 =={{ '=' * node.name|length }}============
 
 .. automodule:: {{ node.name }}
-   :show-inheritance:
 
    .. contents::
       :local:
