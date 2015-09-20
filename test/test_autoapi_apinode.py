@@ -16,7 +16,7 @@
 # under the License.
 
 """
-Test suite for module autoapi.
+Test suite for module autoapi.apinode.
 
 See http://pythontesting.net/framework/pytest/pytest-introduction/#fixtures
 """
@@ -26,17 +26,27 @@ from __future__ import print_function, division
 
 import pytest  # noqa
 
-from autoapi import __version__
+from autoapi import APINode
 
 
-def test_semantic_version():
+def test_autotree():
     """
-    Check that version follows the Semantic Versioning 2.0.0 specification.
-
-        http://semver.org/
+    Check that the APINode tree is consistent with a known package.
     """
-    mayor, minor, rev = map(int, __version__.split('.'))
+    tree = APINode('autoapi')
 
-    assert mayor >= 0
-    assert minor >= 0
-    assert rev >= 0
+    assert tree.is_root()
+    assert len(tree.directory) == 3
+    assert tree.is_relevant()
+    assert tree.has_public_api()
+    assert tree.get_module('autoapi.apinode') is not None
+    assert not tree.get_module('autoapi.apinode').is_relevant()
+    assert tree.tree()
+    assert tree.tree(fullname=False)
+    assert repr(tree)
+    assert str(tree)
+
+    for node, leaves in tree.walk():
+        assert not node.is_leaf()
+        for leaf in leaves:
+            assert leaf.is_leaf()

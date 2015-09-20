@@ -217,7 +217,7 @@ class APINode(object):
         :rtype: bool
         :return: True if no other subnodes exists for this node.
         """
-        return len(self.subnodes) == 0
+        return not self.subnodes
 
     def is_root(self):
         """
@@ -226,7 +226,9 @@ class APINode(object):
         :rtype: bool
         :return: True if the current node is the root node.
         """
-        return self.directory.keys()[0] == self.name
+        for key in self.directory.keys():
+            return key == self.name
+        raise Exception('Empty directory!')
 
     def is_relevant(self):
         """
@@ -330,7 +332,7 @@ class APINode(object):
         return self.tree()
 
     def __repr__(self):
-        return self.tree()
+        return self.name
 
 
 __all__ = ['APINode']
