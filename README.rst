@@ -2,8 +2,14 @@
 autoapi
 =======
 
-Automatic API reference documentation generation for Sphinx inspired by Doxygen
+Automatic Python API reference documentation generator for Sphinx, inspired by
+Doxygen.
 
+AutoAPI is a Sphinx_ extension that allows to automatically generate
+API reference documentation for Python packages
+(:doc:`example <autoapi/autoapi>`), recursively, without any intervention from
+the developer. It will discover all the package modules and their public
+objects and document them.
 
 Documentation
 =============
