@@ -36,6 +36,7 @@ def test_autotree():
     tree = APINode('autoapi')
 
     assert tree.is_root()
+    assert tree.depth() == 1
     assert len(tree.directory) == 3
     assert tree.is_relevant()
     assert tree.has_public_api()
@@ -46,7 +47,11 @@ def test_autotree():
     assert repr(tree)
     assert str(tree)
 
+    depth = 1
     for node, leaves in tree.walk():
         assert not node.is_leaf()
+        assert node.depth() == depth
         for leaf in leaves:
             assert leaf.is_leaf()
+            assert leaf.depth() == depth + 1
+        depth += 1

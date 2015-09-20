@@ -254,6 +254,16 @@ class APINode(object):
 
         return self._relevant
 
+    def depth(self):
+        """
+        Get the depth of the current node in the tree.
+
+        :rtype: int
+        :return: The depth of the node. For example, for node ``my.add.foo``
+         the depth is 3.
+        """
+        return len(self.name.split('.'))
+
     def get_module(self, name):
         """
         Get a module node by it's name.
