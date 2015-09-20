@@ -69,6 +69,7 @@ Classes
 
    .. rubric:: Inheritance
    .. inheritance-diagram:: {{ item }}
+      :parts: 1
 {##}
 {%- endfor -%}
 {%- endif -%}
@@ -91,6 +92,7 @@ Exceptions
 
    .. rubric:: Inheritance
    .. inheritance-diagram:: {{ item }}
+      :parts: 1
 {##}
 {%- endfor -%}
 {%- endif -%}
