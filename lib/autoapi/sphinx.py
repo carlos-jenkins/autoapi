@@ -42,8 +42,10 @@ def handle_exception(func):
         try:
             func(app)
         except Exception as e:
-            app.warn('Unhandled exception in autoapi module: {}'.format(e))
             app.debug(format_exc())
+            app.warn(
+                'Unhandled exception in autoapi module: \n{}'.format(e)
+            )
 
     # Preserve docstring
     if hasattr(func, '__doc__'):

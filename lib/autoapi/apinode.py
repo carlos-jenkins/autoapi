@@ -125,17 +125,33 @@ class APINode(object):
     """
 
     def __init__(self, name, directory=None):
+        self.module = import_module(name)
         self.name = name
         self.subname = name.split('.')[-1]
+
+        self.functions = OrderedDict()
+        self.classes = OrderedDict()
+        self.exceptions = OrderedDict()
+        self.variables = OrderedDict()
+        self.api = OrderedDict((
+            ('functions', self.functions),
+            ('classes', self.classes),
+            ('exceptions', self.exceptions),
+            ('variables', self.variables),
+        ))
+
+        self.subnodes = []
+        self.subnodes_failed = []
 
         self.directory = OrderedDict()
         if directory is not None:
             self.directory = directory
-        self.directory[self.name] = self
 
-        self.module = import_module(name)
-        self.subnodes = []
-        self.subnodes_failed = []
+        self._relevant = None
+
+        # Now that all node public attributes exists and module was imported
+        # register itself in the directory
+        self.directory[self.name] = self
 
         # Check if package and iterate over subnodes
         if hasattr(self.module, '__path__'):
@@ -169,17 +185,6 @@ class APINode(object):
             break
 
         # Categorize objects
-        self.functions = OrderedDict()
-        self.classes = OrderedDict()
-        self.exceptions = OrderedDict()
-        self.variables = OrderedDict()
-        self.api = OrderedDict((
-            ('functions', self.functions),
-            ('classes', self.classes),
-            ('exceptions', self.exceptions),
-            ('variables', self.variables),
-        ))
-
         for obj_name, obj in public.items():
             if isclass(obj):
                 if issubclass(obj, Exception):
@@ -193,8 +198,7 @@ class APINode(object):
             self.variables[obj_name] = obj
 
         # Flag to mark if this branch is relevant
-        # None means undertermined
-        self._relevant = None
+        # For self._relevant, None means undertermined
         if self.is_root():
             self.is_relevant()
 
