@@ -22,6 +22,6 @@ from .apinode import __doc__, APINode  # noqa
 
 __author__ = 'Carlos Jenkins'
 __email__ = 'carlos@jenkins.co.cr'
-__version__ = '1.2.1'
+__version__ = '1.2.2'
 
 __all__ = ['APINode']
