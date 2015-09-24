@@ -232,9 +232,11 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'autoapi.tex',
-     u'autoapi Documentation',
-     u'Carlos Jenkins', 'manual'),
+    (
+        'index', 'autoapi.tex',
+        'autoapi Documentation',
+        'Carlos Jenkins', 'manual'
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -266,7 +268,7 @@ man_pages = [
     (
         'index',
         'autoapi',
-        u'autoapi Documentation',
+        'autoapi Documentation',
         [author], 1
     ),
 ]
@@ -283,10 +285,13 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc, 'autoapi',
-        u'autoapi Documentation',
+        'autoapi Documentation',
         author,
         'autoapi',
-        u'Automatic API reference documentation generation for Sphinx inspired by Doxygen',
+        (
+            'Automatic API reference documentation generation for Sphinx '
+            'inspired by Doxygen'
+        ),
         'Miscellaneous'
     ),
 ]
@@ -302,6 +307,7 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
+
 
 # Add style overrides
 def setup(app):
