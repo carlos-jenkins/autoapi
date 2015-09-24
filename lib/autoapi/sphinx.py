@@ -155,7 +155,7 @@ def setup(app):
     # autodoc is required
     app.setup_extension('sphinx.ext.autodoc')
     app.add_config_value('autoapi_modules', {}, True)
-    app.connect(b'builder-inited', builder_inited)
+    app.connect(str('builder-inited'), builder_inited)
     return {'version': __version__}
 
 
