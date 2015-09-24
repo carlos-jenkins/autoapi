@@ -71,8 +71,8 @@ setup(
     author='Carlos Jenkins',
     author_email='carlos@jenkins.co.cr',
     description=(
-        'Automatic API reference documentation generation for Sphinx '
-        'inspired by Doxygen'
+        'Automatic API reference documentation generation for Sphinx inspired '
+        'by Doxygen'
     ),
     long_description=read('README.rst'),
     url='https://autoapi.readthedocs.org/',
