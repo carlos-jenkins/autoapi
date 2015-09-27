@@ -103,6 +103,12 @@ Usage
             |-- mymodule.submodule.rst
             `-- mymodule.another.rst
 
+   :payload: ``function [None]``
+    A payload provider function for your templates. This function, if provided,
+    will be called each time a module is going to be rendered. It must to
+    return a payload dictionary that will be passed as-is to the template. See
+    :ref:`template_payload`.
+
    For example, a custom configuration could be:
 
    .. code-block:: python
@@ -205,6 +211,49 @@ Now you need to place your template in:
    <templates_path>/autoapi/mymodtemplate.rst
 
 And AutoAPI will use it for documenting ``mymod`` only.
+
+
+.. _template_payload:
+
+Providing extra data to your templates
+--------------------------------------
+
+Your templates may require additional information to render your template.
+You can pass a payload dictionary to your template by setting the ``payload``
+option for your module to a provider function that will output such payload
+dictionary.
+
+AutoAPI will call this function each time a module is going to be rendered and
+will pass two arguments:
+
+:node: The current node in the tree being documented as a instance of
+ :class:`autoapi.APINode`.
+:subnodes: A list of child nodes of the current node. If ``prune`` option is
+ set this is a list of relevant child nodes, if not, is the same as
+ ``node.subnodes``.
+
+Consider those objects read only.
+
+A trivial example could be, in your ``conf.py``:
+
+.. code-block:: python
+
+   def payload_provider(node, subnodes):
+       from datetime import datetime
+       timestamp = datetime.now().replace(microsecond=0).isoformat()
+       return {'timestamp': timestamp}
+
+   autoapi_modules = {
+       'mymod': {'template': 'mytemplate', 'payload': payload_provider}
+   }
+
+And then in your template ``mytemplate.rst``:
+
+.. code-block:: jinja
+
+   {% if payload %}
+   Generation timestamp: {{ payload.timestamp }}
+   {% endif %}
 
 
 Improvements

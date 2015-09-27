@@ -22,6 +22,7 @@ Glue for Sphinx API.
 from __future__ import unicode_literals, absolute_import
 from __future__ import print_function, division
 
+from logging import getLogger
 from traceback import format_exc
 from os.path import join, dirname, abspath, exists
 
@@ -31,6 +32,9 @@ from sphinx.jinja2glue import BuiltinTemplateLoader
 
 from . import __version__
 from .apinode import APINode
+
+
+log = getLogger(__name__)
 
 
 def handle_exception(func):
@@ -98,7 +102,8 @@ def builder_inited(app):
             'prune': False,
             'override': True,
             'template': 'module',
-            'output': module
+            'output': module,
+            'payload': None
         }
         if overrides:
             options.update(overrides)
@@ -143,9 +148,20 @@ def builder_inited(app):
                     if subnode.is_relevant()
                 ]
 
+            # Inject user payload
+            payload = None
+            if options['payload']:
+                try:
+                    payload = options['payload'](node, subnodes)
+                except:
+                    log.error('User payload provider function failed.')
+                    log.debug(format_exc())
+
             # Write file
             with open(out_file, 'w') as fd:
-                fd.write(template.render(node=node, subnodes=subnodes))
+                fd.write(template.render(
+                    node=node, subnodes=subnodes, payload=payload
+                ))
 
 
 def setup(app):
