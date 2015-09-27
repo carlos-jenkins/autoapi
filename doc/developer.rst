@@ -10,7 +10,7 @@ Developer Guide
 Setup Development Environment
 =============================
 
-#. Install `pip` and `tox`:
+#. Install ``pip`` and ``tox``:
 
    ::
 
@@ -33,8 +33,8 @@ Building Documentation
 
    tox -e doc
 
-Output will be available at `.tox/doc/tmp/html`. It is recommended to install
-the `webdev` package:
+Output will be available at ``.tox/doc/tmp/html``. It is recommended to install
+the ``webdev`` package:
 
 ::
 
