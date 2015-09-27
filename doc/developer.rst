@@ -10,39 +10,20 @@ Developer Guide
 Setup Development Environment
 =============================
 
-#. Install `pip` and `virtualenv`:
+#. Install `pip` and `tox`:
 
    ::
 
       sudo apt-get install python-pip
-      sudo pip install virtualenv
-
-#. Create a virtual environment:
-
-   ::
-
-      virtualenv autoapi_env
-      source autoapi_env/bin/activate
-
-#. Install application requirements and development requirements:
-
-   ::
-
-      cd autoapi
-      pip install -r requirements.txt
-      pip install -r requirements.dev.txt
-      pip setup.py develop
+      sudo pip install tox
 
 #. Configure git pre-commit hook:
 
    ::
 
+      sudo pip install flake8 pep8-naming
       flake8 --install-hook
       git config flake8.strict true
-
-.. note::
-
-   To exit the virtual environment issue the `deactivate` command.
 
 
 Building Documentation
