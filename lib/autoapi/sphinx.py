@@ -66,7 +66,7 @@ def get_template_env(app):
        and thus a file system approach is required as it is implemented like
        that.
     """
-    template_dir = [join(dirname(abspath(__file__)), 'template')]
+    template_dir = [join(dirname(abspath(__file__)), 'templates')]
     template_loader = BuiltinTemplateLoader()
     template_loader.init(app.builder, dirs=template_dir)
     template_env = SandboxedEnvironment(loader=template_loader)
@@ -97,14 +97,16 @@ def builder_inited(app):
         options = {
             'prune': False,
             'override': True,
-            'template': 'module.rst',
+            'template': 'module',
             'output': module
         }
         if overrides:
             options.update(overrides)
 
         # Get template
-        template = template_env.get_template(options['template'])
+        template = template_env.get_template(
+            'autoapi/{}.rst'.format(options['template'])
+        )
 
         # Build API tree
         tree = APINode(module)

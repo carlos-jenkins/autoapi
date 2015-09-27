@@ -62,7 +62,7 @@ setup(
     version=find_version('lib/autoapi/__init__.py'),
     package_dir={'': 'lib'},
     packages=find_packages('lib'),
-    package_data={'autoapi': ['template/*.rst']},
+    package_data={'autoapi': ['templates/autoapi/*.rst']},
 
     # Dependencies
     install_requires=find_requirements('requirements.txt'),

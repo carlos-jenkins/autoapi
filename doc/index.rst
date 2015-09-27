@@ -85,9 +85,9 @@ Usage
     On the other hand, if fully automatic reference documentation generation
     is preferred put the output folder of this module in your version control
     ignore file.
-   :template: ``str ['module.rst']``
-    Template name to use. Tis can be changed to use different template names
-    for different modules.
+   :template: ``str ['module']``
+    Template name to use. This option can be changed to use different templates
+    for different modules. See the section :ref:`customizing`.
    :output: ``str [module]``
     Output folder to generate the documentation for this module relative to
     the folder where your ``conf.py`` is located. By default the output folder
@@ -160,20 +160,40 @@ Use the following example as a guide. Check corresponding
 .. literalinclude:: documented.py
 
 
+.. _customizing:
+
 Customizing
 ===========
 
 The `default template`_ used by ``autoapi`` can be customized to meet your
 needs. To do so, copy the default template and put it in your
-``templates_path`` folder under:
+``templates_path`` (usually ``_templates``) folder under:
 
 .. code-block:: text
 
    <templates_path>/autoapi/module.rst
 
-The next run Sphinx_ use it for module documentation generation.
+The next run Sphinx_ will use it for all your modules documentation generation.
 
-FIXME: Add where to put templates when using the ``template`` parameter.
+Also, instead of providing a single template for all your modules you can also
+setup different templates for different modules. For example,  for you module
+``mymod`` you choose to use the template ``mymodtemplate``. In your ``conf.py``
+the following is setup:
+
+.. code-block:: python
+
+   # autoapi configuration
+   autoapi_modules = {
+       'mymod': {'template': 'mymodtemplate'}
+   }
+
+Now you need to place your template in:
+
+.. code-block:: text
+
+   <templates_path>/autoapi/mymodtemplate.rst
+
+And AutoAPI will use it for documenting ``mymod`` only.
 
 
 Improvements
@@ -230,6 +250,6 @@ License
 .. _autodoc: http://sphinx-doc.org/ext/autodoc.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#generating-stub-pages-automatically
 .. _Tox: https://tox.readthedocs.org/
-.. _default template: https://raw.githubusercontent.com/carlos-jenkins/autoapi/master/lib/autoapi/template/module.rst
+.. _default template: https://raw.githubusercontent.com/carlos-jenkins/autoapi/master/lib/autoapi/templates/autoapi/module.rst
 .. _Project GitHub: https://github.com/carlos-jenkins/autoapi
 .. _Project PyPI: https://pypi.python.org/pypi/autoapi/
