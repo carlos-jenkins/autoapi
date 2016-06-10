@@ -47,13 +47,12 @@ Usage
 
       extensions = [
           'sphinx.ext.autodoc',
-          'sphinx.ext.autosummary',
           'sphinx.ext.inheritance_diagram',
           'autoapi.sphinx'
       ]
 
-   Make sure to have ``autodoc``, ``autosummary`` and ``inheritance_diagram``
-   too because the default generation template will use them.
+   Make sure to have ``autodoc`` and ``inheritance_diagram`` too because the
+   default generation template will use them.
 
 #. Configure AutoAPI with the root modules you want to generate documentation
    for:
@@ -79,7 +78,7 @@ Usage
     those modules that do not possess a public interface.
    :override: ``bool [True]``
     Regenerate the reference pages even if they exists. AutoAPI by default is
-    automatic, but if you prefer to use it like ``autosummary_generate`` and
+    automatic, but if you prefer to use it like autosummary_generate_ and
     create stub pages for later manual edition set the ``override`` flag to
     ``False`` and commit the generated pages to your version control.
     On the other hand, if fully automatic reference documentation generation
@@ -259,7 +258,7 @@ License
 .. _Sphinx: http://sphinx-doc.org/
 .. _Virtualenv: https://virtualenv.pypa.io/
 .. _autodoc: http://sphinx-doc.org/ext/autodoc.html
-.. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#generating-stub-pages-automatically
+.. _autosummary_generate: http://sphinx-doc.org/latest/ext/autosummary.html#generating-stub-pages-automatically
 .. _Tox: https://tox.readthedocs.org/
 .. _default template: https://raw.githubusercontent.com/carlos-jenkins/autoapi/master/lib/autoapi/templates/autoapi/module.rst
 .. _Project GitHub: https://github.com/carlos-jenkins/autoapi

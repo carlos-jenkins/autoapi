@@ -13,6 +13,16 @@ This section can use any reST syntax.
 A_CONSTANT = 1000
 """This is an important constant."""
 
+YET_ANOTHER = {
+    'this': 'that',
+    'jam': 'eggs',
+    'yet': {
+        'things': [1, 2, 3, 'a'],
+        'tuples': (A_CONSTANT, 4)
+    }
+}
+"""Yet another public constant variable"""
+
 
 def a_function(my_arg, another):
     """
@@ -90,6 +100,7 @@ class MyException(Exception):
 
 __all__ = [
     'A_CONSTANT',
+    'YET_ANOTHER',
     'a_function',
     'MyClass',
     'AnotherClass',

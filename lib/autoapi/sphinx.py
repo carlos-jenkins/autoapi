@@ -24,6 +24,7 @@ from __future__ import print_function, division
 
 from traceback import format_exc
 from os.path import join, dirname, abspath, exists
+from inspect import getdoc
 
 from jinja2.sandbox import SandboxedEnvironment
 from sphinx.util.osutil import ensuredir
@@ -41,10 +42,11 @@ def handle_exception(func):
     def wrapper(app):
         try:
             func(app)
-        except Exception as e:
-            app.debug(format_exc())
+        except Exception:
             app.warn(
-                'Unhandled exception in autoapi module: \n{}'.format(e)
+                'Unhandled exception in autoapi module: \n{}'.format(
+                    format_exc()
+                )
             )
 
     # Preserve docstring
@@ -52,6 +54,17 @@ def handle_exception(func):
         wrapper.__doc__ = func.__doc__
 
     return wrapper
+
+
+def filter_summary(obj):
+    """
+    Jinja2 filter that allows to extract the documentation summary of an
+    object.
+    """
+    summary = getdoc(obj).split('\n').pop(0)
+    # Escape backslash in RST
+    summary.replace('\\', '\\\\')
+    return summary
 
 
 def get_template_env(app):
@@ -70,6 +83,7 @@ def get_template_env(app):
     template_loader = BuiltinTemplateLoader()
     template_loader.init(app.builder, dirs=template_dir)
     template_env = SandboxedEnvironment(loader=template_loader)
+    template_env.filters['summary'] = filter_summary
     return template_env
 
 
@@ -145,7 +159,12 @@ def builder_inited(app):
 
             # Write file
             with open(out_file, 'w') as fd:
-                fd.write(template.render(node=node, subnodes=subnodes))
+                fd.write(
+                    template.render(
+                        node=node,
+                        subnodes=subnodes
+                    )
+                )
 
 
 def setup(app):

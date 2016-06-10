@@ -15,6 +15,8 @@ import os
 from sys import path
 from os.path import join, dirname, abspath
 
+from autoapi import __version__
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -32,7 +34,6 @@ path.insert(0, dirname(abspath(__file__)))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
     'sphinx.ext.inheritance_diagram',
     'sphinx.ext.intersphinx',
     'sphinxcontrib.plantuml',
@@ -64,7 +65,6 @@ author = 'Carlos Jenkins'
 # built documents.
 #
 # The short X.Y version.
-from autoapi import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__

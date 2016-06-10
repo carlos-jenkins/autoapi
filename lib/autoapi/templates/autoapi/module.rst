@@ -1,16 +1,6 @@
-{%- block toctree -%}
-{%- if subnodes -%}
-.. toctree::
-   :hidden:
-{% for item in subnodes %}
-   {{ item.name }}
-{%- endfor %}
-{##}
-{% endif -%}
-{%- endblock -%}
-=={{ '=' * node.name|length }}============
-``{{ node.name }}`` reference
-=={{ '=' * node.name|length }}============
+=={{ '=' * node.name|length }}==
+``{{ node.name }}``
+=={{ '=' * node.name|length }}==
 
 .. automodule:: {{ node.name }}
 
@@ -20,10 +10,10 @@
 {%- block modules -%}
 {%- if subnodes %}
 
-Modules
-=======
+Submodules
+==========
 
-.. autosummary::
+.. toctree::
 {% for item in subnodes %}
    {{ item.name }}
 {%- endfor %}
@@ -39,10 +29,11 @@ Modules
 Functions
 =========
 
-.. autosummary::
-{% for item in node.functions %}
-   {{ item }}
-{%- endfor %}
+{% for item, obj in node.functions.items() -%}
+- :py:func:`{{ item }}`:
+  {{ obj|summary }}
+
+{% endfor -%}
 
 {% for item in node.functions %}
 .. autofunction:: {{ item }}
@@ -57,11 +48,11 @@ Functions
 Classes
 =======
 
-.. autosummary::
-   :nosignatures:
-{% for item in node.classes %}
-   {{ item }}
-{%- endfor %}
+{% for item, obj in node.classes.items() -%}
+- :py:class:`{{ item }}`:
+  {{ obj|summary }}
+
+{% endfor -%}
 
 {% for item in node.classes %}
 .. autoclass:: {{ item }}
@@ -81,11 +72,11 @@ Classes
 Exceptions
 ==========
 
-.. autosummary::
-   :nosignatures:
-{% for item in node.exceptions %}
-   {{ item }}
-{%- endfor %}
+{% for item, obj in node.exceptions.items() -%}
+- :py:exc:`{{ item }}`:
+  {{ obj|summary }}
+
+{% endfor -%}
 
 {% for item in node.exceptions %}
 .. autoexception:: {{ item }}
@@ -104,13 +95,17 @@ Exceptions
 Variables
 =========
 
-.. autosummary::
-{% for item in node.variables %}
-   {{ item }}
-{%- endfor %}
+{% for item, obj in node.variables.items() -%}
+- :py:data:`{{ item }}`
+{% endfor -%}
 
-{% for item in node.variables %}
+{% for item, obj in node.variables.items() %}
 .. autodata:: {{ item }}
+   :annotation:
+
+   .. code-block:: python
+
+      {{ obj|pprint|indent(6) }}
 {##}
 {%- endfor -%}
 {%- endif -%}

@@ -320,7 +320,7 @@ class APINode(object):
         The tags at the right of the name shows what kind of elements are
         present in the public interfaces of those modules.
 
-        :param int level: Identation level.
+        :param int level: Indentation level.
         :param bool fullname: Plot the full name of the module or just it's
          subname.
         """
