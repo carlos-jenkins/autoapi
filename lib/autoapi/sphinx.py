@@ -22,9 +22,10 @@ Glue for Sphinx API.
 from __future__ import unicode_literals, absolute_import
 from __future__ import print_function, division
 
+from inspect import getdoc
+from logging import getLogger
 from traceback import format_exc
 from os.path import join, dirname, abspath, exists
-from inspect import getdoc
 
 from jinja2.sandbox import SandboxedEnvironment
 from sphinx.util.osutil import ensuredir
@@ -32,6 +33,9 @@ from sphinx.jinja2glue import BuiltinTemplateLoader
 
 from . import __version__
 from .apinode import APINode
+
+
+log = getLogger(__name__)
 
 
 def handle_exception(func):
@@ -61,10 +65,21 @@ def filter_summary(obj):
     Jinja2 filter that allows to extract the documentation summary of an
     object.
     """
-    summary = getdoc(obj).split('\n').pop(0)
-    # Escape backslash in RST
-    summary.replace('\\', '\\\\')
-    return summary
+    try:
+        doc = getdoc(obj)
+        if doc is None:
+            return 'Undocumented.'
+
+        summary = doc.split('\n').pop(0)
+        summary.replace('\\', '\\\\')  # Escape backslash in RST
+        return summary
+    except:
+        log.error(
+            'AutoApi failed to determine autosummary for obj: {}'.format(obj)
+        )
+        log.error(format_exc())
+
+    return 'AutoApi: Unable to determine summary.'
 
 
 def get_template_env(app):

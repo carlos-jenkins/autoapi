@@ -103,7 +103,7 @@ Variables
 .. autodata:: {{ item }}
    :annotation:
 
-   .. code-block:: python
+   .. code-block:: guess
 
       {{ obj|pprint|indent(6) }}
 {##}

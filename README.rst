@@ -13,7 +13,7 @@ their public objects and document them.
 Documentation
 =============
 
-    https://autoapi.readthedocs.org/
+    https://autoapi.readthedocs.io/
 
 
 License
