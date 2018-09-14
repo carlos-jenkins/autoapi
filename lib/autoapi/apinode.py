@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015 Carlos Jenkins <carlos@jenkins.co.cr>
+# Copyright (C) 2015-2018 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -162,9 +162,9 @@ class APINode(object):
                 try:
                     subnode = APINode(subname, self.directory)
                     self.subnodes.append(subnode)
-                except:  # Overbroad exception handling on purpose
+                except Exception as e:
                     log.error('Failed to import {}'.format(subname))
-                    log.debug(format_exc())
+                    log.error(format_exc())
                     self.subnodes_failed.append(subname)
 
         # Fetch all public objects
