@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015 Carlos Jenkins <carlos@jenkins.co.cr>
+# Copyright (C) 2015-2018 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ from __future__ import print_function, division
 
 from .apinode import __doc__, APINode  # noqa
 
-__author__ = 'Carlos Jenkins'
-__email__ = 'carlos@jenkins.co.cr'
-__version__ = '1.3.1'
+__author__ = 'KuraLabs S.R.L'
+__email__ = 'info@kuralabs.io'
+__version__ = '1.4.0'
 
 __all__ = ['APINode']

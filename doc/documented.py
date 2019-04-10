@@ -37,8 +37,9 @@ def a_function(my_arg, another):
     :param int my_arg: The first argument of the function. Just a number.
     :param another: The other argument of the important function.
     :type another: A list of :class:`MyClass`
-    :rtype: int
+
     :return: The length of the second argument times the first argument.
+    :rtype: int
     """
     return my_arg * len(another)
 
@@ -52,7 +53,9 @@ class MyClass(object):
     :param int param1: The first parameter of my class.
     :param param2: The second one.
     :type param2: int or float
+
     :var my_attribute: Just an instance attribute.
+
     :raises TypeError: if param2 is not None.
     """
 
@@ -74,9 +77,10 @@ class MyClass(object):
 
         :param int param1: A parameter.
         :param list param2: Another parameter.
-        :rtype: list of int
+
         :return: A list of the first parameter as long a the length of the
          second parameter.
+        :rtype: list of int
         """
         return [param1] * len(param2)
 

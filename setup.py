@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015 Carlos Jenkins <carlos@jenkins.co.cr>
+# Copyright (C) 2015-2018 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -68,8 +68,8 @@ setup(
     install_requires=find_requirements('requirements.txt'),
 
     # Metadata
-    author='Carlos Jenkins',
-    author_email='carlos@jenkins.co.cr',
+    author='KuraLabs S.R.L',
+    author_email='info@kuralabs.io',
     description=(
         'Automatic API reference documentation generation for Sphinx inspired '
         'by Doxygen'
@@ -79,7 +79,7 @@ setup(
     keywords='autoapi',
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
@@ -88,5 +88,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ]
 )

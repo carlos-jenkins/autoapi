@@ -13,7 +13,7 @@
 
 import os
 from sys import path
-from os.path import join, dirname, abspath
+from os.path import dirname, abspath
 
 from autoapi import __version__
 
@@ -36,9 +36,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.inheritance_diagram',
     'sphinx.ext.intersphinx',
-    'sphinxcontrib.plantuml',
-    'sphinx.ext.graphviz',
-    'autoapi.sphinx'
+    'autoapi.sphinx',
+    'plantweb.directive',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -57,8 +56,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'autoapi'
-copyright = '2015, Carlos Jenkins'
-author = 'Carlos Jenkins'
+author = 'KuraLabs S.R.L'
+copyright = '2015-2018, ' + author
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -235,7 +234,7 @@ latex_documents = [
     (
         'index', 'autoapi.tex',
         'autoapi Documentation',
-        'Carlos Jenkins', 'manual'
+        author, 'manual'
     ),
 ]
 
@@ -313,22 +312,22 @@ texinfo_documents = [
 def setup(app):
     app.add_stylesheet('styles/custom.css')
 
+
 # autoapi configuration
 autoapi_modules = {
     'autoapi': {'prune': True},
     'documented': {'output': 'autoapi'}
 }
 
-# Configure PlantUML
-plantuml = 'java -jar ' + join(dirname(abspath(__name__)), 'plantuml.8030.jar')
-plantuml_output_format = 'svg'
-
-# Configure Graphviz
-graphviz_output_format = 'svg'
+# Plantweb configuration
+plantweb_defaults = {
+    'use_cache': True,
+    'format': 'svg',
+}
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3.4', None)
+    'python': ('https://docs.python.org/3', None)
 }
 
 # Setup theme if not building in readthedocs.org

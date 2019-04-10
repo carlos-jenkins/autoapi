@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015 Carlos Jenkins <carlos@jenkins.co.cr>
+# Copyright (C) 2015-2018 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ from __future__ import unicode_literals, absolute_import
 from __future__ import print_function, division
 
 from inspect import getdoc
-from logging import getLogger
+from functools import wraps
 from traceback import format_exc
 from os.path import join, dirname, abspath, exists
 
 from jinja2.sandbox import SandboxedEnvironment
 from sphinx.util.osutil import ensuredir
+from sphinx.util.logging import getLogger
 from sphinx.jinja2glue import BuiltinTemplateLoader
 
 from . import __version__
@@ -43,19 +44,16 @@ def handle_exception(func):
     Utility decorator to report all exceptions in module without making Sphinx
     to die.
     """
+    @wraps(func)
     def wrapper(app):
         try:
             func(app)
         except Exception:
-            app.warn(
+            log.warning(
                 'Unhandled exception in autoapi module: \n{}'.format(
                     format_exc()
                 )
             )
-
-    # Preserve docstring
-    if hasattr(func, '__doc__'):
-        wrapper.__doc__ = func.__doc__
 
     return wrapper
 
@@ -73,9 +71,9 @@ def filter_summary(obj):
         summary = doc.split('\n').pop(0)
         summary.replace('\\', '\\\\')  # Escape backslash in RST
         return summary
-    except:
+    except Exception as e:
         log.error(
-            'AutoApi failed to determine autosummary for obj: {}'.format(obj)
+            'AutoApi failed to determine summary for obj: {}'.format(obj)
         )
         log.error(format_exc())
 
@@ -158,7 +156,8 @@ def builder_inited(app):
 
         # Iterate nodes and render them
         for node in nodes:
-            out_file = join(out_dir, node.name + app.config.source_suffix[0])
+            source_suffix = next(iter(app.config.source_suffix))
+            out_file = join(out_dir, node.name + source_suffix)
 
             # Skip file if it override is off and it exists
             if not options['override'] and exists(out_file):
