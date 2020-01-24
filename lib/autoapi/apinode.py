@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2018 KuraLabs S.R.L
+# Copyright (C) 2015-2020 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,15 +71,12 @@ Being Variables the default if it cannot be determined that an element belongs
 to any of other categories.
 """
 
-from __future__ import unicode_literals, absolute_import
-from __future__ import print_function, division
-
 from logging import getLogger
+from pkgutil import iter_modules
 from traceback import format_exc
 from importlib import import_module
-from pkgutil import iter_modules
-from inspect import isclass, isfunction
 from collections import OrderedDict
+from inspect import isclass, isfunction
 
 
 log = getLogger(__name__)
@@ -162,7 +159,7 @@ class APINode(object):
                 try:
                     subnode = APINode(subname, self.directory)
                     self.subnodes.append(subnode)
-                except Exception as e:
+                except Exception:
                     log.error('Failed to import {}'.format(subname))
                     log.error(format_exc())
                     self.subnodes_failed.append(subname)

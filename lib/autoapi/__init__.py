@@ -15,13 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from __future__ import unicode_literals, absolute_import
-from __future__ import print_function, division
-
 from .apinode import __doc__, APINode  # noqa
 
 __author__ = 'KuraLabs S.R.L'
 __email__ = 'info@kuralabs.io'
-__version__ = '1.4.1'
+__version__ = '2.0.0'
 
 __all__ = ['APINode']

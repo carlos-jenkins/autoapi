@@ -1,0 +1,8 @@
+# Purpose:
+#
+#   This requirements are Python packages that need to be installed in order
+#   to successfully generate the project's documentation.
+
+sphinx
+plantweb
+sphinx_rtd_theme

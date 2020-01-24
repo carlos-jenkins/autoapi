@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2018 KuraLabs S.R.L
+# Copyright (C) 2015-2020 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@
 """
 Glue for Sphinx API.
 """
-
-from __future__ import unicode_literals, absolute_import
-from __future__ import print_function, division
 
 from inspect import getdoc
 from functools import wraps
@@ -71,7 +68,7 @@ def filter_summary(obj):
         summary = doc.split('\n').pop(0)
         summary.replace('\\', '\\\\')  # Escape backslash in RST
         return summary
-    except Exception as e:
+    except Exception:
         log.error(
             'AutoApi failed to determine summary for obj: {}'.format(obj)
         )

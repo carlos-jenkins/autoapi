@@ -1,7 +1,0 @@
-flake8
-pep8-naming
-pytest
-pytest-cov
-sphinx
-sphinx_rtd_theme
-plantweb
