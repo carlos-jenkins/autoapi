@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2015-2018 KuraLabs S.R.L
+# Copyright (C) 2015-2020 KuraLabs S.R.L
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +22,6 @@ from .apinode import __doc__, APINode  # noqa
 
 __author__ = 'KuraLabs S.R.L'
 __email__ = 'info@kuralabs.io'
-__version__ = '1.4.0'
+__version__ = '1.4.1'
 
 __all__ = ['APINode']
