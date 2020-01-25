@@ -1,3 +1,7 @@
+.float-right {
+    float: right;
+}
+
 /* Improve autodoc */
 
 /* Show reference in a box */
@@ -10,11 +14,13 @@ dl.data {
 }
 
 /* Extend reference heads to the width */
-dl.class dt,
-dl.function dt,
-dl.exception dt,
-dl.data dt {
-    width: 100% !important;
+dl.class > dt,
+dl.function > dt,
+dl.exception > dt,
+dl.data > dt {
+    background-color: #D3D3D3 !important;
+    margin: 0 !important;
+    padding: 0.5em !important;
 }
 
 /* Improve box spacing */
