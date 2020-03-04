@@ -19,6 +19,6 @@ from .apinode import __doc__, APINode  # noqa
 
 __author__ = 'KuraLabs S.R.L'
 __email__ = 'info@kuralabs.io'
-__version__ = '2.0.0'
+__version__ = '2.0.1'
 
 __all__ = ['APINode']

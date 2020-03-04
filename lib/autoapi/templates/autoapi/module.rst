@@ -103,7 +103,7 @@ Variables
 .. autodata:: {{ item }}
    :annotation:
 
-   .. code-block:: python3
+   .. code-block:: text
 
       {{ obj|pprint|indent(6) }}
 {##}
